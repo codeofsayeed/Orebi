@@ -84,14 +84,14 @@ h6 {
   cursor: not-allowed;
 }
 /* header */
-S .top {
+.top {
   display: flex;
   align-items: center;
   height: 100px;
   justify-content: space-between;
   position: relative;
 }
-SS .logo {
+.logo {
   font-weight: 700;
   font-size: 22px;
   letter-spacing: 1px;
@@ -105,7 +105,7 @@ SS .logo {
   left: 50%;
   transform: translateX(-50%);
 }
-S .menu .on {
+.menu .on {
   color: var(--dark);
   font-weight: 700;
 }
@@ -1380,5 +1380,373 @@ hr {
   }
   .search.small {
     width: 100%;
+  }
+}
+
+/* ===== v4: header + footer rebuilt from the Figma measurements (1920px design) ===== */
+:root {
+  --w: 1648px;
+} /* 1600px of content + 24px padding each side, like Figma */
+body {
+  overflow-x: hidden;
+}
+h1 {
+  margin-top: 124px;
+} /* Figma: page title starts 124px under the header */
+/* header */
+.hd {
+  position: relative;
+  z-index: 20;
+  font-size: 14px;
+}
+.hd-top {
+  background: #fff;
+  height: 80px;
+}
+.hd-top-in {
+  height: 80px;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+.hd-logo {
+  font-weight: 700;
+  font-size: 19px;
+  letter-spacing: 0.01em;
+  color: var(--dark);
+  line-height: 1;
+}
+.hd-menu {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  gap: 40px;
+  color: var(--gray);
+  white-space: nowrap;
+}
+.hd-menu a {
+  color: var(--gray);
+}
+.hd-menu a.on {
+  color: var(--dark);
+  font-weight: 700;
+}
+.hd-bar {
+  background: var(--soft);
+  height: 100px;
+}
+.hd-bar-in {
+  height: 100px;
+  display: grid;
+  grid-template-columns: 1fr minmax(0, 601px) 1fr;
+  align-items: center;
+  position: relative;
+}
+.hd-cat {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  color: var(--dark);
+  font-size: 14px;
+  padding: 0;
+  justify-self: start;
+}
+.hd-search {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #fff;
+  height: 50px;
+  padding: 0 21px;
+}
+.hd-search input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: none;
+  font-size: 14px;
+  color: var(--dark);
+}
+.hd-search input::placeholder {
+  color: #c4c4c4;
+}
+.hd-search button {
+  border: 0;
+  background: none;
+  cursor: pointer;
+  display: flex;
+  padding: 0;
+}
+.hd-right {
+  justify-self: end;
+  display: flex;
+  gap: 40px;
+  align-items: center;
+}
+.hd-ic {
+  border: 0;
+  background: none;
+  cursor: pointer;
+  display: flex;
+  padding: 0;
+  position: relative;
+}
+.hd-ic i {
+  position: absolute;
+  top: -9px;
+  right: -10px;
+  min-width: 16px;
+  height: 16px;
+  border-radius: 8px;
+  background: var(--dark);
+  color: #fff;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+  padding: 0 4px;
+}
+.hd-pop {
+  position: absolute;
+  z-index: 30;
+}
+/* categories menu (263 x 300) */
+.hd-cats {
+  left: 24px;
+  top: 81px;
+  width: 263px;
+  background: var(--dark);
+}
+.hd-cats a {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 50px;
+  padding: 0 21px;
+  color: rgba(255, 255, 255, 0.7);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+.hd-cats a:last-child {
+  border-bottom: 0;
+}
+.hd-cats i {
+  font-style: normal;
+  font-size: 18px;
+}
+.hd-cats a:hover {
+  color: #fff;
+  font-weight: 700;
+}
+/* my account dropdown (200 x 100) */
+.hd-acct {
+  right: 83px;
+  top: 73px;
+  width: 200px;
+}
+.hd-acct a,
+.hd-acct button {
+  display: block;
+  width: 100%;
+  height: 50px;
+  line-height: 48px;
+  text-align: center;
+  background: #fff;
+  border: 1px solid #f0f0f0;
+  color: var(--dark);
+  font-size: 14px;
+  cursor: pointer;
+  padding: 0;
+}
+.hd-acct .dark {
+  background: #2b2b2b;
+  border-color: #2b2b2b;
+  color: #fff;
+  font-weight: 700;
+}
+.hd-acct a:not(.dark):hover,
+.hd-acct button:hover {
+  background: var(--soft);
+}
+/* cart popup (360 x 241) */
+.hd-cart {
+  right: 24px;
+  top: 73px;
+  width: 360px;
+  background: #fff;
+  border: 1px solid #f0f0f0;
+}
+.hd-cart-top {
+  background: var(--soft);
+  padding: 21px;
+  height: 120px;
+  overflow: auto;
+}
+.hd-ci {
+  display: grid;
+  grid-template-columns: 80px 1fr 20px;
+  gap: 20px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.hd-ci b {
+  display: block;
+  font-size: 14px;
+  line-height: 24px;
+}
+.hd-ci button {
+  border: 0;
+  background: none;
+  cursor: pointer;
+  color: var(--dark);
+}
+.hd-ciimg {
+  width: 80px;
+  height: 80px;
+  background: #d8d8d8;
+  overflow: hidden;
+}
+.hd-ciimg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.hd-empty {
+  margin: 32px 0;
+  text-align: center;
+  color: var(--gray);
+}
+.hd-cart-bot {
+  padding: 0 21px 20px;
+}
+.hd-cart-bot p {
+  margin: 0;
+  padding: 13px 0;
+  color: var(--gray);
+  font-size: 16px;
+  line-height: 23px;
+}
+.hd-cart-bot p b {
+  color: var(--dark);
+}
+.hd-btns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 21px;
+}
+.hd-b {
+  display: block;
+  text-align: center;
+  height: 50px;
+  line-height: 50px;
+  background: var(--dark);
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+  border: 1px solid #2b2b2b;
+}
+.hd-b.out {
+  background: #fff;
+  color: var(--dark);
+}
+/* footer */
+.ft {
+  background: var(--soft);
+  padding: 55px 0 59px;
+  font-size: 14px;
+  color: #6d6d6d;
+}
+.ft-cols {
+  display: grid;
+  grid-template-columns: 195px 214px 274px 520px 1fr;
+  align-items: start;
+}
+.ft h6 {
+  font-size: 16px;
+  line-height: 23px;
+  color: var(--dark);
+  margin: 0 0 17px;
+}
+.ft-cols a {
+  display: block;
+  line-height: 23px;
+  margin-bottom: 6px;
+  color: #6d6d6d;
+}
+.ft-contact b {
+  display: block;
+  font-size: 16px;
+  line-height: 27px;
+  color: var(--dark);
+}
+.ft-contact p {
+  margin: 22px 0 0;
+  line-height: 23px;
+}
+.ft-logo {
+  display: inline-block;
+  margin-top: 2px;
+  font-weight: 700;
+  font-size: 35px;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  color: var(--dark);
+}
+.ft-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 65px;
+}
+.ft-social {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+.ft-social a {
+  display: flex;
+}
+/* Home hero: full width like the Figma slider */
+.hero {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+}
+@media (max-width: 1000px) {
+  .hd-menu {
+    position: static;
+    transform: none;
+    gap: 20px;
+    margin-left: auto;
+  }
+  .hd-bar-in {
+    grid-template-columns: auto 1fr auto;
+    gap: 12px;
+  }
+  .hd-cat span {
+    display: none;
+  }
+  .hd-cats {
+    left: 12px;
+  }
+  .hd-cart {
+    right: 12px;
+  }
+  .hd-acct {
+    right: 60px;
+  }
+  .ft-cols {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+  }
+  .ft-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
   }
 }

@@ -41,6 +41,22 @@ export const STATUSES = [
   "Delivered",
   "Cancelled",
 ];
+const labels = {
+  bowl: "Marble Mortar & Pestle",
+  headphones: "Wireless Headphones",
+  table: "Round Side Table",
+  cap: "Classic Baseball Cap",
+  clock: "Analog Clock",
+  backpack: "Black Travel Backpack",
+  sunglasses: "Classic Sunglasses",
+  basket: "Woven Storage Basket",
+  "desk-clock": "Black Desk Alarm Clock",
+  "product-31": "Leaf Plush Toy",
+  "product-16": "Striped Basket Set",
+  "product-19": "Black Smart Watch",
+  "product-12": "Grey Canvas Backpack",
+  "product-27": "Patterned Ceramic Vase",
+};
 const tags = {
   0: "New",
   1: "-10%",
@@ -56,7 +72,7 @@ const wait = (v) => new Promise((r) => setTimeout(() => r(v), 60));
 
 let products = names.map((n, i) => ({
   id: String(i + 1),
-  name: "Basic Crew Neck Tee", // template placeholder from the Figma file; rename in the dashboard
+  name: labels[n], // rename in the dashboard or here
   price: 44,
   oldPrice: tags[i] ? 88 : null,
   color: colors[i % 5],
@@ -93,7 +109,7 @@ let orders = seedOrders.map(([customer, q, status, d], i) => ({
   items: [
     {
       id: String((i % names.length) + 1),
-      name: "Basic Crew Neck Tee",
+      name: products[i % names.length].name,
       qty: q,
       price: 44,
     },
