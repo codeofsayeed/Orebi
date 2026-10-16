@@ -57,6 +57,22 @@ const labels = {
   "product-12": "Grey Canvas Backpack",
   "product-27": "Patterned Ceramic Vase",
 };
+const prices = {
+  bowl: 36,
+  headphones: 59,
+  table: 44,
+  cap: 14.5,
+  clock: 27,
+  backpack: 64,
+  sunglasses: 19,
+  basket: 22.5,
+  "desk-clock": 44,
+  "product-31": 9.5,
+  "product-16": 39,
+  "product-19": 44,
+  "product-12": 49,
+  "product-27": 29,
+};
 const tags = {
   0: "New",
   1: "-10%",
@@ -73,11 +89,14 @@ const wait = (v) => new Promise((r) => setTimeout(() => r(v), 60));
 let products = names.map((n, i) => ({
   id: String(i + 1),
   name: labels[n], // rename in the dashboard or here
-  price: 44,
-  oldPrice: tags[i] ? 88 : null,
+  price: prices[n],
+  oldPrice: /%/.test(tags[i] || "")
+    ? Math.round(prices[n] / (1 - parseInt(tags[i].replace("-", ""), 10) / 100))
+    : null,
   color: colors[i % 5],
   brand: `Brand ${(i % 5) + 1}`,
   category: `Category ${(i % 5) + 1}`,
+  sub: i % 2 ? "Type B" : "Type A",
   tag: tags[i] || "",
   stock: 20 + i,
   image: img(n),
@@ -104,14 +123,14 @@ let orders = seedOrders.map(([customer, q, status, d], i) => ({
   customer,
   status,
   date: day(d),
-  total: q * 44,
+  total: q * products[i % names.length].price,
   payment: i % 2 ? "Bank 2" : "Bank",
   items: [
     {
       id: String((i % names.length) + 1),
       name: products[i % names.length].name,
       qty: q,
-      price: 44,
+      price: products[i % names.length].price,
     },
   ],
 }));
