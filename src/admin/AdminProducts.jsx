@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { productsApi, IMAGE_OPTIONS } from "../services/api.js";
 import Img from "../components/Img.jsx";
+import { COLORS } from "../services/colors.js";
 import { Confirm, Modal, Pager, money, useToast } from "./ui.jsx";
 
 const PER = 8;
@@ -270,8 +271,8 @@ export default function AdminProducts() {
             <label>
               Color
               <select value={form.color} onChange={set("color")}>
-                {["Black", "Red", "Green", "Gray", "Teal"].map((c) => (
-                  <option key={c}>{c}</option>
+                {COLORS.map((c) => (
+                  <option key={c.name}>{c.name}</option>
                 ))}
               </select>
             </label>

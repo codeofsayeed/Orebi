@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { productsApi } from "../services/api.js";
 import ProductCard from "../components/ProductCard.jsx";
+import { COLORS } from "../services/colors.js";
 
 /* ============ EDIT THE FILTER LISTS HERE ============ */
 const CATEGORIES = [
@@ -16,14 +17,7 @@ const SUBCATS = {
   "Category 1": ["Type A", "Type B"],
   "Category 3": ["Type A", "Type B"],
 };
-const COLORS = [
-  // name must match a product's `color`; dot is the circle colour
-  { name: "Black", dot: "#262626" },
-  { name: "Red", dot: "#ff8686" },
-  { name: "Green", dot: "#7ed321" },
-  { name: "Gray", dot: "#b6b6b6" },
-  { name: "Teal", dot: "#15cba8" },
-];
+// Colours: edit src/services/colors.js
 const BRANDS = ["Brand 1", "Brand 2", "Brand 3", "Brand 4", "Brand 5"];
 const PRICES = [
   [0, 9.99],

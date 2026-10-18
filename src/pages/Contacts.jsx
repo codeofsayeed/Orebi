@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { messagesApi } from "../services/api.js";
 
+/* ================= EDIT YOUR OFFICES HERE =================
+   The live map searches for `address` automatically, so just type the real address.
+   If the map finds the wrong place, add a `mapQuery` to that office, e.g. mapQuery: 'Orebi Store, Dhaka'. */
 const OFFICES = [
   {
     name: "Germany Office",
@@ -24,6 +27,12 @@ const OFFICES = [
     hours: "Mon - Fri: 9am - 6pm",
   },
 ];
+/* ========================================================== */
+
+const mapSrc = (o) =>
+  `https://maps.google.com/maps?q=${encodeURIComponent(o.mapQuery || o.address)}&z=15&output=embed`;
+const mapLink = (o) =>
+  `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(o.mapQuery || o.address)}`;
 
 export default function Contacts() {
   const [f, setF] = useState({ name: "", email: "", message: "" });
@@ -36,6 +45,7 @@ export default function Contacts() {
     setF({ name: "", email: "", message: "" });
     setSent(true);
   };
+  const office = OFFICES[active];
   return (
     <>
       <h1>Contacts</h1>
@@ -70,7 +80,17 @@ export default function Contacts() {
         <button className="btn">Post</button>
         {sent && <p className="muted">Thanks! Your message has been sent.</p>}
       </form>
-      <div className="map" style={{ backgroundImage: "url(/images/map.png)" }}>
+
+      <div className="map">
+        {/* live map: drag to move, scroll or +/- to zoom. key= reloads it when another office is picked */}
+        <iframe
+          key={active}
+          title={`Map of ${office.name}`}
+          src={mapSrc(office)}
+          loading="lazy"
+          referrerPolicy="no-referrer-when-downgrade"
+          allowFullScreen
+        />
         <div className="locs">
           {OFFICES.map((o, i) => (
             <div
@@ -85,12 +105,20 @@ export default function Contacts() {
                   <p>{o.phone}</p>
                   <p>{o.email}</p>
                   <p>{o.hours}</p>
+                  <a
+                    className="dir"
+                    href={mapLink(o)}
+                    target="_blank"
+                    rel="noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    Open in Google Maps ↗
+                  </a>
                 </div>
               )}
             </div>
           ))}
         </div>
-        <span className="pin">📍</span>
       </div>
     </>
   );

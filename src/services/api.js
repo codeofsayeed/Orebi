@@ -82,7 +82,23 @@ const tags = {
   9: "New",
   11: "-10%",
 };
-const colors = ["Black", "Red", "Green", "Gray", "Teal"];
+// Real colour of each product, taken from its picture. Names must exist in src/services/colors.js
+const productColors = {
+  bowl: "Gray",
+  headphones: "Burgundy",
+  table: "Brown",
+  cap: "Gray",
+  clock: "Gray",
+  backpack: "Black",
+  sunglasses: "Black",
+  basket: "Beige",
+  "desk-clock": "Black",
+  "product-31": "Gray",
+  "product-16": "Brown",
+  "product-19": "Black",
+  "product-12": "Gray",
+  "product-27": "White",
+};
 const day = (n) => new Date(Date.now() - n * 864e5).toISOString().slice(0, 10);
 const wait = (v) => new Promise((r) => setTimeout(() => r(v), 60));
 
@@ -93,7 +109,7 @@ let products = names.map((n, i) => ({
   oldPrice: /%/.test(tags[i] || "")
     ? Math.round(prices[n] / (1 - parseInt(tags[i].replace("-", ""), 10) / 100))
     : null,
-  color: colors[i % 5],
+  color: productColors[n],
   brand: `Brand ${(i % 5) + 1}`,
   category: `Category ${(i % 5) + 1}`,
   sub: i % 2 ? "Type B" : "Type A",
