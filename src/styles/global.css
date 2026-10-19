@@ -1921,3 +1921,16 @@ button.flt-title {
     top: 12px;
   }
 }
+
+/* v8: product details list */
+.acc-body {
+  padding: 12px 0 4px;
+  line-height: 1.7;
+}
+.acc-body ul {
+  margin: 0;
+  padding-left: 18px;
+}
+.acc-body p {
+  margin: 0 0 8px;
+}

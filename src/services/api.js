@@ -77,6 +77,121 @@ const prices = {
   "product-12": 49,
   "product-27": 29,
 };
+// Product text. Keys match the image names in `names`. Edit freely.
+const descriptions = {
+  bowl: "A solid marble mortar and pestle for grinding spices, herbs and pastes by hand. The heavy stone base stays steady on the counter, and the polished gray finish looks good left out in the kitchen.",
+  headphones:
+    "Over-ear wireless headphones in a deep burgundy finish. Soft padded ear cups and an adjustable headband keep them comfortable through long listening sessions.",
+  table:
+    "A round side table with a white top and a warm brown base. Compact enough for a small corner, it holds a lamp, a book or your morning coffee.",
+  cap: "A classic baseball cap with a gray crown and a black curved brim. Lightweight and easy to wear, it works for everyday errands, sport or sunny days out.",
+  clock:
+    "A simple analog clock with a clean gray face and easy-to-read hands. A quiet, minimal piece that suits a living room, kitchen or office wall.",
+  backpack:
+    "A black travel backpack with several pockets to keep your things organized. Padded shoulder straps make it comfortable to carry on commutes, trips and days out.",
+  sunglasses:
+    "Classic black sunglasses with a timeless frame that suits most face shapes. Dark lenses cut glare on bright days, whether you are driving, walking or traveling.",
+  basket:
+    "A woven storage basket in a light beige finish. Use it for laundry, blankets, toys, or as a tidy bin in any room of the house.",
+  "desk-clock":
+    "A compact black alarm clock for your desk or bedside table. Clear to read at a glance, with a clean, modern shape that does not take up much space.",
+  "product-31":
+    "A soft gray plush toy holding a green leaf. Gentle to hold and fun to display, it makes a thoughtful gift for children and collectors alike.",
+  "product-16":
+    "A set of striped storage baskets in brown and black. Stack or nest them to organize shelves, bathrooms and closets, and keep small items out of sight.",
+  "product-19":
+    "A black smart watch with a slim, comfortable band. Check the time and keep up with your day without reaching for your phone.",
+  "product-12":
+    "A gray canvas backpack with sturdy straps and a roomy main compartment. A comfortable everyday bag for school, work or weekend trips.",
+  "product-27":
+    "A white ceramic vase with a bold black pattern. It looks great with fresh flowers, or on its own as a decorative piece on a shelf or table.",
+};
+const features = {
+  bowl: [
+    "Material: natural marble",
+    "Color: Gray",
+    "Heavy base that stays in place",
+    "Hand wash, then dry before storing",
+  ],
+  headphones: [
+    "Wireless, over-ear design",
+    "Padded ear cups and adjustable headband",
+    "Color: Burgundy",
+    "Includes charging cable",
+  ],
+  table: [
+    "Round top with a compact footprint",
+    "Color: Brown base, white top",
+    "Fits beside a sofa or bed",
+    "Wipe clean with a damp cloth",
+  ],
+  cap: [
+    "Curved brim",
+    "Color: Gray crown, black brim",
+    "Lightweight and breathable",
+    "Spot clean only",
+  ],
+  clock: [
+    "Analog display with clear hands",
+    "Color: Gray",
+    "Quiet, minimal design",
+    "Runs on a standard AA battery",
+  ],
+  backpack: [
+    "Multiple pockets for organizing",
+    "Padded shoulder straps",
+    "Color: Black",
+    "Suits commutes and short trips",
+  ],
+  sunglasses: [
+    "Classic frame, suits most faces",
+    "Dark lenses reduce glare",
+    "Color: Black",
+    "Wipe lenses with a soft cloth",
+  ],
+  basket: [
+    "Woven finish",
+    "Color: Beige",
+    "Good for laundry, blankets or toys",
+    "Wipe clean with a dry cloth",
+  ],
+  "desk-clock": [
+    "Alarm clock for desk or bedside",
+    "Color: Black",
+    "Compact, space-saving shape",
+    "Easy-to-read display",
+  ],
+  "product-31": [
+    "Soft plush filling",
+    "Color: Gray with a green leaf",
+    "A good gift idea",
+    "Spot clean gently",
+  ],
+  "product-16": [
+    "Set of striped baskets",
+    "Color: Brown and black",
+    "Stack or nest to save space",
+    "Wipe clean with a dry cloth",
+  ],
+  "product-19": [
+    "Slim, comfortable band",
+    "Color: Black",
+    "Shows the time at a glance",
+    "Charge before first use",
+  ],
+  "product-12": [
+    "Roomy main compartment",
+    "Sturdy shoulder straps",
+    "Color: Gray canvas",
+    "Spot clean only",
+  ],
+  "product-27": [
+    "Material: ceramic",
+    "Color: White with a black pattern",
+    "Holds fresh or dried flowers",
+    "Hand wash recommended",
+  ],
+};
 const tags = {
   0: "New",
   1: "-10%",
@@ -121,8 +236,8 @@ let products = names.map((n, i) => ({
   stock: 20 + i,
   image: img(n),
   gallery: [0, 1, 2, 3].map((k) => img(names[(i + k) % names.length])),
-  description:
-    "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since the 1500s.",
+  description: descriptions[n],
+  features: features[n],
 }));
 
 const seedOrders = [
@@ -179,7 +294,7 @@ const body = (a) => a.join("\n\n");
 let posts = [
   {
     id: "p1",
-    title: "How to style a minimal home in five easy steps",
+    title: "How to Style a Minimal Home in Five Easy Steps",
     category: "Home",
     date: day(2),
     image: img("basket"),
@@ -194,7 +309,7 @@ let posts = [
   },
   {
     id: "p2",
-    title: "The desk clock that keeps your mornings on time",
+    title: "The Desk Clock that Keeps Your Mornings on Time",
     category: "Guides",
     date: day(5),
     image: img("desk-clock"),
@@ -209,7 +324,7 @@ let posts = [
   },
   {
     id: "p3",
-    title: "Headphones worth the hype: what to listen for",
+    title: "Headphones Worth the Hype: What to Listen for",
     category: "Tech",
     date: day(9),
     image: img("headphones"),
@@ -224,7 +339,7 @@ let posts = [
   },
   {
     id: "p4",
-    title: "Everyday carry: choosing a backpack that lasts",
+    title: "Everyday Carry: Choosing a Backpack that Lasts",
     category: "Style",
     date: day(14),
     image: img("backpack"),
@@ -239,7 +354,7 @@ let posts = [
   },
   {
     id: "p5",
-    title: "Sunglasses 101: frames for every face shape",
+    title: "Sunglasses 101: Frames for Every Face Shape",
     category: "Style",
     date: day(20),
     image: img("sunglasses"),
@@ -254,7 +369,7 @@ let posts = [
   },
   {
     id: "p6",
-    title: "Small table, big impact: styling a side table",
+    title: "Small Table, Big Impact: Styling a Side Table",
     category: "Home",
     date: day(27),
     image: img("table"),
@@ -269,7 +384,7 @@ let posts = [
   },
   {
     id: "p7",
-    title: "Winter caps that actually keep you warm",
+    title: "Winter Caps that Actually Keep You Warm",
     category: "Guides",
     date: day(33),
     image: img("cap"),
@@ -289,6 +404,7 @@ export const productsApi = {
       image: "",
       gallery: [],
       description: "",
+      features: [],
       oldPrice: null,
       ...p,
       id: String(Date.now()),

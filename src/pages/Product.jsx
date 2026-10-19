@@ -3,24 +3,18 @@ import { useParams } from "react-router-dom";
 import { productsApi } from "../services/api.js";
 import { useApp } from "../context/AppContext.jsx";
 import Img from "../components/Img.jsx";
+import { colorDot } from "../services/colors.js";
 import NotFound from "./NotFound.jsx";
 
-const SWATCH = {
-  Black: "#262626",
-  Red: "#ff8686",
-  Green: "#7ed321",
-  Gray: "#b6b6b6",
-  Teal: "#15cba8",
-};
-const Acc = ({ title, children }) => {
-  const [open, setOpen] = useState(false);
+const Acc = ({ title, children, start }) => {
+  const [open, setOpen] = useState(!!start);
   return (
     <div className="acc">
       <button onClick={() => setOpen(!open)}>
         {title}
         <span>{open ? "−" : "+"}</span>
       </button>
-      {open && <p className="muted">{children}</p>}
+      {open && <div className="muted acc-body">{children}</div>}
     </div>
   );
 };
@@ -70,7 +64,7 @@ export default function Product() {
           ))}
         </div>
         <div className="info-col">
-          <h2 className="t">Product</h2>
+          <h2 className="t">{p.name}</h2>
           <div className="stars">
             ★★★★★{" "}
             <span className="muted">
@@ -84,10 +78,7 @@ export default function Product() {
           <hr />
           <div className="opt">
             <span>COLOR:</span>
-            <i
-              className="sw"
-              style={{ background: SWATCH[p.color] || "#262626" }}
-            />
+            <i className="sw" style={{ background: colorDot(p.color) }} />
           </div>
           <div className="opt">
             <span>SIZE:</span>
@@ -121,9 +112,23 @@ export default function Product() {
             </button>
           </div>
           <hr />
-          <Acc title="FEATURES & DETAILS">{p.description}</Acc>
+          <Acc title="FEATURES & DETAILS" start>
+            {p.features?.length ? (
+              <ul>
+                {p.features.map((x) => (
+                  <li key={x}>{x}</li>
+                ))}
+              </ul>
+            ) : (
+              p.description
+            )}
+          </Acc>
           <Acc title="SHIPPING & RETURNS">
-            Free shipping. Return policy in 30 days.
+            <p>
+              Free shipping on every order. Not happy with it? Return it within
+              30 days of delivery for a refund.
+            </p>
+            <p>Every product comes with a two-year warranty.</p>
           </Acc>
         </div>
       </div>

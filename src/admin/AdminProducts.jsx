@@ -14,6 +14,7 @@ const blank = {
   brand: "Brand 1",
   tag: "",
   image: IMAGE_OPTIONS[0].value,
+  description: "",
 };
 
 export default function AdminProducts() {
@@ -293,6 +294,15 @@ export default function AdminProducts() {
                   </option>
                 ))}
               </select>
+            </label>
+            <label className="full">
+              Description
+              <textarea
+                rows="3"
+                value={form.description}
+                onChange={set("description")}
+                placeholder="Short description shown on the product page"
+              />
             </label>
             <div className="full preview">
               <div className="img thumb">
