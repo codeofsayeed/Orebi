@@ -26,11 +26,13 @@ export default function AdminJournal() {
     e.preventDefault();
     if (!form.title || !form.body)
       return toast("Title and article text are required", "err");
-    if (form.id) {
-      await postsApi.update(form.id, form);
+    const { custom, ...data } = form;
+    if (custom) data.image = custom;
+    if (data.id) {
+      await postsApi.update(data.id, data);
       toast("Article updated");
     } else {
-      await postsApi.create(form);
+      await postsApi.create(data);
       toast("Article created");
     }
     setForm(null);
@@ -128,6 +130,14 @@ export default function AdminJournal() {
               </select>
             </label>
             <label className="full">
+              Or your own photo path (optional)
+              <input
+                value={form.custom || ""}
+                onChange={set("custom")}
+                placeholder="/images/journal/my-photo.jpg"
+              />
+            </label>
+            <label className="full">
               Short summary
               <input value={form.excerpt} onChange={set("excerpt")} />
             </label>
@@ -137,7 +147,7 @@ export default function AdminJournal() {
             </label>
             <div className="full preview">
               <div className="img thumb">
-                <Img src={form.image} alt="" />
+                <Img src={form.custom || form.image} alt="" />
               </div>
               <label className="chk">
                 <input

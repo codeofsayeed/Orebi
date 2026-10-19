@@ -24,16 +24,20 @@ const names = [
   "product-27",
 ];
 const jimg = (n) => `/images/journal/journal-${n}.svg`;
-export const JOURNAL_IMAGES = [
-  "home",
-  "clock",
-  "headphones",
-  "backpack",
-  "sunglasses",
-  "table",
-  "cap",
-].map((n) => ({ label: n, value: jimg(n) }));
 export const IMAGE_OPTIONS = names.map((n) => ({ label: n, value: img(n) }));
+// Journal picker: real photos first, then the drawn illustrations (public/images/journal)
+export const JOURNAL_IMAGES = [
+  ...IMAGE_OPTIONS.map((o) => ({ label: `photo: ${o.label}`, value: o.value })),
+  ...[
+    "home",
+    "clock",
+    "headphones",
+    "backpack",
+    "sunglasses",
+    "table",
+    "cap",
+  ].map((n) => ({ label: `illustration: ${n}`, value: jimg(n) })),
+];
 export const STATUSES = [
   "Pending",
   "Paid",
@@ -178,7 +182,7 @@ let posts = [
     title: "How to style a minimal home in five easy steps",
     category: "Home",
     date: day(2),
-    image: jimg("home"),
+    image: img("basket"),
     published: true,
     excerpt:
       "Neutral tones, honest materials and a few well-chosen pieces are all it takes to make a space feel calm.",
@@ -193,7 +197,7 @@ let posts = [
     title: "The desk clock that keeps your mornings on time",
     category: "Guides",
     date: day(5),
-    image: jimg("clock"),
+    image: img("desk-clock"),
     published: true,
     excerpt:
       "A small, quiet clock can change how you start the day. Here is what to look for before you buy.",
@@ -208,7 +212,7 @@ let posts = [
     title: "Headphones worth the hype: what to listen for",
     category: "Tech",
     date: day(9),
-    image: jimg("headphones"),
+    image: img("headphones"),
     published: true,
     excerpt:
       "Comfort, battery life and sound balance matter more than the spec sheet suggests.",
@@ -223,7 +227,7 @@ let posts = [
     title: "Everyday carry: choosing a backpack that lasts",
     category: "Style",
     date: day(14),
-    image: jimg("backpack"),
+    image: img("backpack"),
     published: true,
     excerpt:
       "Straps, zips and stitching tell you more about a backpack than its logo ever will.",
@@ -238,7 +242,7 @@ let posts = [
     title: "Sunglasses 101: frames for every face shape",
     category: "Style",
     date: day(20),
-    image: jimg("sunglasses"),
+    image: img("sunglasses"),
     published: true,
     excerpt:
       "The right frame balances your features. A quick guide to finding yours.",
@@ -253,7 +257,7 @@ let posts = [
     title: "Small table, big impact: styling a side table",
     category: "Home",
     date: day(27),
-    image: jimg("table"),
+    image: img("table"),
     published: true,
     excerpt:
       "A side table is the easiest place to show some personality. Keep it simple.",
@@ -268,7 +272,7 @@ let posts = [
     title: "Winter caps that actually keep you warm",
     category: "Guides",
     date: day(33),
-    image: jimg("cap"),
+    image: img("cap"),
     published: false,
     excerpt: "Draft: material guide for cold-weather caps.",
     body: "Draft in progress.",
