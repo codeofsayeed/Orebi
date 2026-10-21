@@ -18,13 +18,12 @@ const MENU = [
   ["/journal", "Journal"],
 ];
 const CATS = [
-  ["Accesories", "Category 1"],
-  ["Furniture", "Category 2"],
-  ["Electronics", "Category 3"],
-  ["Clothes", "Category 4"],
-  ["Bags", "Category 5"],
-  ["Home appliances", ""],
-];
+  ["Accessories", "Accessories"],
+  ["Furniture", "Furniture"],
+  ["Electronics", "Electronics"],
+  ["Bags", "Bags"],
+  ["Home & Living", "Home & Living"],
+]; // [label shown, category it opens]
 const HELP = [
   "Privacy Policy",
   "Terms & Conditions",
@@ -292,12 +291,9 @@ function Footer() {
           </div>
           <div>
             <h6>SHOP</h6>
-            {[1, 2, 3, 4, 5].map((n) => (
-              <Link
-                key={n}
-                to={`/shop?category=${encodeURIComponent(`Category ${n}`)}`}
-              >
-                Category {n}
+            {CATS.map(([label, c]) => (
+              <Link key={label} to={`/shop?category=${encodeURIComponent(c)}`}>
+                {label}
               </Link>
             ))}
           </div>

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { productsApi, IMAGE_OPTIONS } from "../services/api.js";
 import Img from "../components/Img.jsx";
 import { COLORS } from "../services/colors.js";
+import { CATEGORIES, SUBCATS } from "../services/categories.js";
 import { Confirm, Modal, Pager, money, useToast } from "./ui.jsx";
 
 const PER = 8;
@@ -9,7 +10,8 @@ const blank = {
   name: "",
   price: "",
   stock: "",
-  category: "Category 1",
+  category: CATEGORIES[0],
+  sub: "",
   color: "Black",
   brand: "Brand 1",
   tag: "",
@@ -263,9 +265,23 @@ export default function AdminProducts() {
             </label>
             <label>
               Category
-              <select value={form.category} onChange={set("category")}>
-                {[1, 2, 3, 4, 5].map((n) => (
-                  <option key={n}>Category {n}</option>
+              <select
+                value={form.category}
+                onChange={(e) =>
+                  setForm({ ...form, category: e.target.value, sub: "" })
+                }
+              >
+                {CATEGORIES.map((c) => (
+                  <option key={c}>{c}</option>
+                ))}
+              </select>
+            </label>
+            <label>
+              Sub-category
+              <select value={form.sub} onChange={set("sub")}>
+                <option value="">None</option>
+                {(SUBCATS[form.category] || []).map((c) => (
+                  <option key={c}>{c}</option>
                 ))}
               </select>
             </label>

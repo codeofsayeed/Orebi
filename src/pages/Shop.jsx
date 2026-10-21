@@ -3,20 +3,10 @@ import { useSearchParams } from "react-router-dom";
 import { productsApi } from "../services/api.js";
 import ProductCard from "../components/ProductCard.jsx";
 import { COLORS } from "../services/colors.js";
+import { CATEGORIES, SUBCATS } from "../services/categories.js";
 
 /* ============ EDIT THE FILTER LISTS HERE ============ */
-const CATEGORIES = [
-  "Category 1",
-  "Category 2",
-  "Category 3",
-  "Category 4",
-  "Category 5",
-];
-// Categories listed here get a "+" button that opens sub-categories (products need a matching `sub` value).
-const SUBCATS = {
-  "Category 1": ["Type A", "Type B"],
-  "Category 3": ["Type A", "Type B"],
-};
+// Categories and sub-categories: edit src/services/categories.js
 // Colours: edit src/services/colors.js
 const BRANDS = ["Brand 1", "Brand 2", "Brand 3", "Brand 4", "Brand 5"];
 const PRICES = [

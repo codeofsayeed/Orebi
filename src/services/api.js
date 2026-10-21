@@ -192,6 +192,23 @@ const features = {
     "Hand wash recommended",
   ],
 };
+// Category and sub-category of each product (names must exist in src/services/categories.js; '' = no sub-category)
+const productCategories = {
+  bowl: ["Home & Living", "Kitchen"],
+  headphones: ["Electronics", "Audio"],
+  table: ["Furniture", ""],
+  cap: ["Accessories", ""],
+  clock: ["Home & Living", "Decor"],
+  backpack: ["Bags", ""],
+  sunglasses: ["Accessories", ""],
+  basket: ["Home & Living", "Storage"],
+  "desk-clock": ["Electronics", "Watches & Clocks"],
+  "product-31": ["Home & Living", "Decor"],
+  "product-16": ["Home & Living", "Storage"],
+  "product-19": ["Electronics", "Watches & Clocks"],
+  "product-12": ["Bags", ""],
+  "product-27": ["Home & Living", "Decor"],
+};
 const tags = {
   0: "New",
   1: "-10%",
@@ -230,8 +247,8 @@ let products = names.map((n, i) => ({
     : null,
   color: productColors[n],
   brand: `Brand ${(i % 5) + 1}`,
-  category: `Category ${(i % 5) + 1}`,
-  sub: i % 2 ? "Type B" : "Type A",
+  category: productCategories[n][0],
+  sub: productCategories[n][1],
   tag: tags[i] || "",
   stock: 20 + i,
   image: img(n),
@@ -294,7 +311,7 @@ const body = (a) => a.join("\n\n");
 let posts = [
   {
     id: "p1",
-    title: "How to Style a Minimal Home in Five Easy Steps",
+    title: "How to style a minimal home in five easy steps",
     category: "Home",
     date: day(2),
     image: img("basket"),
@@ -309,7 +326,7 @@ let posts = [
   },
   {
     id: "p2",
-    title: "The Desk Clock that Keeps Your Mornings on Time",
+    title: "The desk clock that keeps your mornings on time",
     category: "Guides",
     date: day(5),
     image: img("desk-clock"),
@@ -324,7 +341,7 @@ let posts = [
   },
   {
     id: "p3",
-    title: "Headphones Worth the Hype: What to Listen for",
+    title: "Headphones worth the hype: what to listen for",
     category: "Tech",
     date: day(9),
     image: img("headphones"),
@@ -339,7 +356,7 @@ let posts = [
   },
   {
     id: "p4",
-    title: "Everyday Carry: Choosing a Backpack that Lasts",
+    title: "Everyday carry: choosing a backpack that lasts",
     category: "Style",
     date: day(14),
     image: img("backpack"),
@@ -354,7 +371,7 @@ let posts = [
   },
   {
     id: "p5",
-    title: "Sunglasses 101: Frames for Every Face Shape",
+    title: "Sunglasses 101: frames for every face shape",
     category: "Style",
     date: day(20),
     image: img("sunglasses"),
@@ -369,7 +386,7 @@ let posts = [
   },
   {
     id: "p6",
-    title: "Small Table, Big Impact: Styling a Side Table",
+    title: "Small table, big impact: styling a side table",
     category: "Home",
     date: day(27),
     image: img("table"),
@@ -384,7 +401,7 @@ let posts = [
   },
   {
     id: "p7",
-    title: "Winter Caps that Actually Keep You Warm",
+    title: "Winter caps that actually keep you warm",
     category: "Guides",
     date: day(33),
     image: img("cap"),
