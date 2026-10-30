@@ -2535,3 +2535,19 @@ button.flt-title {
     grid-template-columns: 1fr;
   }
 }
+
+/* v11: footer social icons are links */
+.ft-social a {
+  display: flex;
+  transition:
+    opacity 0.15s,
+    transform 0.15s;
+}
+.ft-social a:hover {
+  opacity: 0.55;
+  transform: translateY(-2px);
+}
+.ft-social a:focus-visible {
+  outline: 2px solid var(--dark);
+  outline-offset: 4px;
+}

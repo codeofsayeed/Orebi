@@ -18,6 +18,7 @@ const TITLES = {
   "/admin/products": "Products",
   "/admin/messages": "Messages",
   "/admin/journal": "Journal",
+  "/admin/settings": "Settings",
 };
 
 // Shows database errors (for example "permission denied") as a red notice.
@@ -85,6 +86,7 @@ export default function AdminLayout() {
             {item("/admin/products", "Products", "products")}
             {item("/admin/messages", "Messages", "messages", badges.messages)}
             {item("/admin/journal", "Journal", "journal")}
+            {item("/admin/settings", "Settings", "settings")}
           </nav>
           <div className="spacer" />
           <div className={`ad-mode ${backend}`}>

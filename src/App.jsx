@@ -1,24 +1,25 @@
-import { Routes, Route } from 'react-router-dom'
-import Layout from './components/Layout.jsx'
-import Home from './pages/Home.jsx'
-import Shop from './pages/Shop.jsx'
-import Product from './pages/Product.jsx'
-import About from './pages/About.jsx'
-import Contacts from './pages/Contacts.jsx'
-import Login from './pages/Login.jsx'
-import Signup from './pages/Signup.jsx'
-import Account from './pages/Account.jsx'
-import Cart from './pages/Cart.jsx'
-import Checkout from './pages/Checkout.jsx'
-import Journal from './pages/Journal.jsx'
-import JournalPost from './pages/JournalPost.jsx'
-import NotFound from './pages/NotFound.jsx'
-import AdminLayout from './admin/AdminLayout.jsx'
-import Dashboard from './admin/Dashboard.jsx'
-import AdminProducts from './admin/AdminProducts.jsx'
-import AdminOrders from './admin/AdminOrders.jsx'
-import AdminMessages from './admin/AdminMessages.jsx'
-import AdminJournal from './admin/AdminJournal.jsx'
+import { Routes, Route } from "react-router-dom";
+import Layout from "./components/Layout.jsx";
+import Home from "./pages/Home.jsx";
+import Shop from "./pages/Shop.jsx";
+import Product from "./pages/Product.jsx";
+import About from "./pages/About.jsx";
+import Contacts from "./pages/Contacts.jsx";
+import Login from "./pages/Login.jsx";
+import Signup from "./pages/Signup.jsx";
+import Account from "./pages/Account.jsx";
+import Cart from "./pages/Cart.jsx";
+import Checkout from "./pages/Checkout.jsx";
+import Journal from "./pages/Journal.jsx";
+import JournalPost from "./pages/JournalPost.jsx";
+import NotFound from "./pages/NotFound.jsx";
+import AdminLayout from "./admin/AdminLayout.jsx";
+import Dashboard from "./admin/Dashboard.jsx";
+import AdminProducts from "./admin/AdminProducts.jsx";
+import AdminOrders from "./admin/AdminOrders.jsx";
+import AdminMessages from "./admin/AdminMessages.jsx";
+import AdminJournal from "./admin/AdminJournal.jsx";
+import AdminSettings from "./admin/AdminSettings.jsx";
 
 export default function App() {
   return (
@@ -44,7 +45,8 @@ export default function App() {
         <Route path="products" element={<AdminProducts />} />
         <Route path="messages" element={<AdminMessages />} />
         <Route path="journal" element={<AdminJournal />} />
+        <Route path="settings" element={<AdminSettings />} />
       </Route>
     </Routes>
-  )
+  );
 }

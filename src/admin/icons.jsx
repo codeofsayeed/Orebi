@@ -11,6 +11,8 @@ const PATHS = {
   shop: "M3 9l1-5h16l1 5 M3 9h18 M5 9v11h14V9",
   logout: "M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4 M16 17l5-5-5-5 M21 12H9",
   plus: "M12 5v14 M5 12h14",
+  settings:
+    "M4 21v-7 M4 10V3 M12 21v-9 M12 8V3 M20 21v-5 M20 12V3 M1 14h6 M9 8h6 M17 16h6",
 };
 
 export const Icon = ({ name, size = 18 }) => (
