@@ -90,7 +90,7 @@ export default function Home() {
           style={{ backgroundImage: "url(/images/clock.png)" }}
         />
         <div>
-          <h2>Phone of the year</h2>
+          <h2>Clock of the year</h2>
           <p className="muted">
             Lorem Ipsum is simply dummy text of the printing and typesetting
             industry.
