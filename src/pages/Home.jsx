@@ -91,10 +91,7 @@ export default function Home() {
         />
         <div>
           <h2>Clock of the year</h2>
-          <p className="muted">
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry.
-          </p>
+          <p className="muted">The best selling clock in our shop right now.</p>
           <Link className="btn" to="/shop">
             Shop Now
           </Link>
