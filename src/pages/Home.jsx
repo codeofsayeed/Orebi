@@ -36,7 +36,7 @@ export default function Home() {
             Offer
           </h1>
           <p className="muted">
-            Up to <b className="big">50%</b> sale for all furniture items!
+            Up to <b className="big">50%</b> Sale for All Furniture Items!
           </p>
           <Link className="btn" to="/shop">
             Shop Now
@@ -44,9 +44,9 @@ export default function Home() {
         </div>
       </div>
       <div className="info">
-        <span>✓ Two years warranty</span>
-        <span>🚚 Free shipping</span>
-        <span>↺ Return policy in 30 days</span>
+        <span>✓ Two Years Warranty</span>
+        <span>🚚 Free Shipping</span>
+        <span>↺ Return Policy in 30 Days</span>
       </div>
 
       <div className="ads">
@@ -54,19 +54,19 @@ export default function Home() {
           to="/shop"
           className="ad a1"
           style={{ backgroundImage: "url(/images/ad-1.png)" }}
-          aria-label="Phones sale"
+          aria-label="Phones Sale"
         />
         <Link
           to="/shop"
           className="ad a2"
           style={{ backgroundImage: "url(/images/ad-2.png)" }}
-          aria-label="Electronics sale"
+          aria-label="Electronics Sale"
         />
         <Link
           to="/shop"
           className="ad a3"
           style={{ backgroundImage: "url(/images/ad-3.png)" }}
-          aria-label="Furniture offer"
+          aria-label="Furniture Offer"
         />
       </div>
 
@@ -90,8 +90,8 @@ export default function Home() {
           style={{ backgroundImage: "url(/images/clock.png)" }}
         />
         <div>
-          <h2>Clock of the year</h2>
-          <p className="muted">The best selling clock in our shop right now.</p>
+          <h2>Clock of The Year</h2>
+          <p className="muted">The Best Selling Clock in Our Shop Right Now.</p>
           <Link className="btn" to="/shop">
             Shop Now
           </Link>

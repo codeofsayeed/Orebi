@@ -116,7 +116,7 @@ export default function Shop() {
         <aside className="flt">
           {any && (
             <button className="link ul flt-clear" onClick={clear}>
-              Clear all filters
+              Clear All Filters
             </button>
           )}
 
@@ -232,8 +232,8 @@ export default function Shop() {
               Sort by:{" "}
               <select value={sort} onChange={(e) => setSort(e.target.value)}>
                 <option value="featured">Featured</option>
-                <option value="low">Price: low to high</option>
-                <option value="high">Price: high to low</option>
+                <option value="low">Price: Low to High</option>
+                <option value="high">Price: High to Low</option>
               </select>
             </label>
             <label>
@@ -257,7 +257,7 @@ export default function Shop() {
             ))}
           </div>
           {!slice.length && (
-            <p className="muted">No products match these filters.</p>
+            <p className="muted">No Products Match These Filters.</p>
           )}
           <div className="pager">
             <div>

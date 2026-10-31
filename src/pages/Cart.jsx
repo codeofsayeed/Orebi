@@ -10,7 +10,7 @@ export default function Cart() {
       <p className="crumb">Home &nbsp;&gt;&nbsp; Cart</p>
       {!cart.length ? (
         <p className="muted">
-          Your cart is empty. <Link to="/shop">Go shopping</Link>
+          Your cart is empty. <Link to="/shop">Go Shopping</Link>
         </p>
       ) : (
         <>
@@ -54,18 +54,18 @@ export default function Cart() {
               <tr className="foot-row">
                 <td colSpan="4">
                   <div className="coupon">
-                    <input placeholder="Coupon code" />
-                    <button className="link">Apply coupon</button>
+                    <input placeholder="Coupon Code" />
+                    <button className="link">Apply Coupon</button>
                   </div>
                   <button className="link right" onClick={clearCart}>
-                    Clear cart
+                    Clear Cart
                   </button>
                 </td>
               </tr>
             </tbody>
           </table>
           <div className="totals">
-            <h5>Cart totals</h5>
+            <h5>Cart Totals</h5>
             <div>
               <span>Subtotal</span>
               <span>${total.toFixed(2)}</span>
