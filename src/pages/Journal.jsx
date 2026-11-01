@@ -68,7 +68,7 @@ export default function Journal() {
               setQ(e.target.value);
               setN(6);
             }}
-            placeholder="Search articles"
+            placeholder="Search Articles"
           />
         </div>
       </div>
@@ -85,7 +85,7 @@ export default function Journal() {
             </div>
             <h2>{first.title}</h2>
             <p className="muted">{first.excerpt}</p>
-            <span className="btn">Read article</span>
+            <span className="btn">Read Article</span>
           </div>
         </Link>
       )}
