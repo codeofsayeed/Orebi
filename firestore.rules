@@ -28,12 +28,18 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
-    // Orders: anyone can place one (status must start as Pending); only admins can read or manage them.
+    // Orders: anyone can place one (status must be Pending, or Paid for the demo payment); only admins can read or manage them.
     match /orders/{id} {
-      allow create: if request.resource.data.status == 'Pending'
+      allow create: if request.resource.data.status in ['Pending', 'Paid']
                     && request.resource.data.total is number
                     && request.resource.data.total >= 0;
       allow read, update, delete: if isAdmin();
+    }
+
+    // Site settings (footer social links): everyone can read, only admins can change.
+    match /settings/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
     }
 
     // Contact form: anyone can send, only admins can read.

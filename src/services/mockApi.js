@@ -6,7 +6,9 @@
  * Firebase later:  npm i firebase -> src/services/firebase.js with
  *   initializeApp(config); export const db = getFirestore(); export const auth = getAuth()
  */
+// Picture paths: product photos are PNG files in public/images; journal drawings are SVG files in public/images/journal
 const img = (n) => `/images/${n}.png`;
+// One name per product picture. A name is also the key used in the lists below (labels, prices, ...).
 const names = [
   "bowl",
   "headphones",
@@ -24,6 +26,7 @@ const names = [
   "product-27",
 ];
 const jimg = (n) => `/images/journal/journal-${n}.svg`;
+// Picture choices for the dashboard forms
 export const IMAGE_OPTIONS = names.map((n) => ({ label: n, value: img(n) }));
 // Journal picker: real photos first, then the drawn illustrations (public/images/journal)
 export const JOURNAL_IMAGES = [
@@ -38,6 +41,7 @@ export const JOURNAL_IMAGES = [
     "cap",
   ].map((n) => ({ label: `illustration: ${n}`, value: jimg(n) })),
 ];
+// The order statuses
 export const STATUSES = [
   "Pending",
   "Paid",
@@ -45,6 +49,7 @@ export const STATUSES = [
   "Delivered",
   "Cancelled",
 ];
+// Product names
 const labels = {
   bowl: "Marble Mortar & Pestle",
   headphones: "Wireless Headphones",
@@ -61,6 +66,7 @@ const labels = {
   "product-12": "Grey Canvas Backpack",
   "product-27": "Patterned Ceramic Vase",
 };
+// Product prices in dollars
 const prices = {
   bowl: 36,
   headphones: 59,
@@ -209,6 +215,7 @@ const productCategories = {
   "product-12": ["Bags", ""],
   "product-27": ["Home & Living", "Decor"],
 };
+// Small label on a product card. The number is the position in names (0 = the first product).
 const tags = {
   0: "New",
   1: "-10%",
@@ -235,9 +242,12 @@ const productColors = {
   "product-12": "Gray",
   "product-27": "White",
 };
+// Date as text, n days ago (0 = today)
 const day = (n) => new Date(Date.now() - n * 864e5).toISOString().slice(0, 10);
+// Pretend to be a database: answer after a very short delay
 const wait = (v) => new Promise((r) => setTimeout(() => r(v), 60));
 
+// Build the demo products from the lists above (one product for each name)
 let products = names.map((n, i) => ({
   id: String(i + 1),
   name: labels[n], // rename in the dashboard or here
@@ -257,6 +267,7 @@ let products = names.map((n, i) => ({
   features: features[n],
 }));
 
+// Demo orders: [customer, quantity, status, days ago]
 const seedOrders = [
   ["John Ford", 2, "Delivered", 12],
   ["Mia Chen", 3, "Delivered", 10],
@@ -270,6 +281,7 @@ const seedOrders = [
   ["Ella Fox", 6, "Paid", 1],
   ["Kim Ali", 1, "Pending", 0],
 ];
+// Turn those rows into full order objects
 let orders = seedOrders.map(([customer, q, status, d], i) => ({
   id: `ORD-${1001 + i}`,
   customer,
@@ -286,8 +298,10 @@ let orders = seedOrders.map(([customer, q, status, d], i) => ({
     },
   ],
 }));
+// Number for the next new order
 let seq = 1001 + orders.length;
 
+// Demo contact-form messages
 let messages = [
   {
     id: "m1",
@@ -307,7 +321,9 @@ let messages = [
   },
 ];
 
+// Join paragraphs with a blank line between them
 const body = (a) => a.join("\n\n");
+// Demo journal articles
 let posts = [
   {
     id: "p1",
@@ -423,6 +439,7 @@ export const SETTINGS_DEFAULT = {
 };
 let settings = { ...SETTINGS_DEFAULT };
 
+// Same functions as firebaseApi.js, but the data is kept in memory and is lost when the page reloads
 export const productsApi = {
   list: () => wait([...products]), // getDocs(collection(db, 'products'))
   get: (id) => wait(products.find((p) => p.id === id) || null), // getDoc(doc(db, 'products', id))
@@ -451,39 +468,73 @@ export const productsApi = {
   }, // deleteDoc
 };
 
+// Live updates for the demo data: a page subscribes to a list, and every change sends it the new list.
+// (Demo data lives only inside this browser tab. Firebase mode shares live updates between computers.)
+const listeners = { orders: new Set(), messages: new Set() };
+const notify = (name, list) => listeners[name].forEach((cb) => cb([...list]));
+const subscribe = (name, get) => (cb) => {
+  listeners[name].add(cb);
+  // send the current list right away
+  setTimeout(() => {
+    if (listeners[name].has(cb)) cb([...get()]);
+  }, 0);
+  // calling the returned function stops the updates
+  return () => listeners[name].delete(cb);
+};
+
 export const ordersApi = {
   list: () => wait([...orders]), // getDocs(query(collection(db, 'orders'), orderBy('date', 'desc')))
+  subscribe: subscribe("orders", () => orders), // onSnapshot(collection(db, 'orders'), ...)
   create: (o) => {
     // addDoc(collection(db, 'orders'), o)
-    const item = { id: `ORD-${seq++}`, status: "Pending", date: day(0), ...o };
+    const item = {
+      id: `ORD-${seq++}`,
+      status: "Pending",
+      date: day(0),
+      createdAt: Date.now(),
+      ...o,
+    };
     orders = [item, ...orders];
+    notify("orders", orders);
     return wait(item);
   },
   update: (id, patch) => {
     orders = orders.map((o) => (o.id === id ? { ...o, ...patch } : o));
+    notify("orders", orders);
     return wait(true);
   }, // updateDoc
   remove: (id) => {
     orders = orders.filter((o) => o.id !== id);
+    notify("orders", orders);
     return wait(true);
   }, // deleteDoc
 };
 
 export const messagesApi = {
   list: () => wait([...messages]), // getDocs(collection(db, 'messages'))
+  subscribe: subscribe("messages", () => messages), // onSnapshot(collection(db, 'messages'), ...)
   create: (m) => {
     messages = [
-      { id: String(Date.now()), date: day(0), read: false, ...m },
+      {
+        id: String(Date.now()),
+        date: day(0),
+        createdAt: Date.now(),
+        read: false,
+        ...m,
+      },
       ...messages,
     ];
+    notify("messages", messages);
     return wait(true);
   },
   update: (id, patch) => {
     messages = messages.map((m) => (m.id === id ? { ...m, ...patch } : m));
+    notify("messages", messages);
     return wait(true);
   },
   remove: (id) => {
     messages = messages.filter((m) => m.id !== id);
+    notify("messages", messages);
     return wait(true);
   },
 };
@@ -537,6 +588,7 @@ export const authApi = {
   },
 };
 
+// Nothing to fill in demo mode
 export const seedApi = { run: async () => {} };
 
 // Footer social links (edited in Admin > Settings)

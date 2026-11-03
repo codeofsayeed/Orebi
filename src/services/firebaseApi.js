@@ -9,6 +9,7 @@ import {
   doc,
   getDoc,
   getDocs,
+  onSnapshot,
   query,
   setDoc,
   updateDoc,
@@ -24,11 +25,16 @@ import {
 import { auth, db } from "./firebase.js";
 import { SEED, SETTINGS_DEFAULT } from "./mockApi.js";
 
+// Get a Firestore collection by name (products, orders, ...)
 const col = (name) => collection(db, name);
+// Today's date as text, for example 2026-11-01
 const today = () => new Date().toISOString().slice(0, 10);
+// A Firestore document keeps its id outside its data, so put the id back into the object
 const withId = (d) => ({ id: d.id, ...d.data() });
+// Remove the id before saving (the id is the document name, not a field)
 const stripId = ({ id, ...rest }) => rest;
 
+// Friendly texts for common database errors
 const DB_MESSAGES = {
   "permission-denied":
     "Permission denied. Log in as an admin and make sure the Firestore rules are published.",
@@ -46,6 +52,7 @@ const fail = (e) => {
   window.dispatchEvent(new CustomEvent("orebi-error", { detail: msg }));
   throw new Error(msg);
 };
+// Run a database action. If it fails, show the message and stop (see fail above).
 const run = async (fn) => {
   try {
     return await fn();
@@ -54,7 +61,32 @@ const run = async (fn) => {
   }
 };
 
+// Live list: Firestore calls cb again every time the collection changes (new order, new message, ...).
+// Returns a function that stops the updates.
+const live = (name, cb) =>
+  onSnapshot(
+    col(name),
+    (snap) =>
+      cb(
+        snap.docs
+          .map(withId)
+          .sort((a, b) => (b.createdAt ?? 0) - (a.createdAt ?? 0)),
+      ),
+    (e) => {
+      // for example permission denied
+      console.error("[firebase]", e);
+      window.dispatchEvent(
+        new CustomEvent("orebi-error", {
+          detail: DB_MESSAGES[e.code] || e.message,
+        }),
+      );
+      cb([]);
+    },
+  );
+
+// PRODUCTS: list, get one, create, update, remove
 export const productsApi = {
+  // Read every product and sort them by their order field
   list: () =>
     run(async () =>
       (await getDocs(col("products"))).docs
@@ -93,7 +125,9 @@ export const productsApi = {
     }),
 };
 
+// ORDERS: placed at Checkout, managed in the admin panel
 export const ordersApi = {
+  subscribe: (cb) => live("orders", cb), // live list for the admin panel
   list: () =>
     run(async () =>
       (await getDocs(col("orders"))).docs
@@ -106,7 +140,7 @@ export const ordersApi = {
       const id = `ORD-${Date.now().toString(36).toUpperCase().slice(-6)}`;
       const data = {
         ...stripId(o),
-        status: "Pending",
+        status: o.status === "Paid" ? "Paid" : "Pending",
         date: today(),
         createdAt: Date.now(),
         uid: auth.currentUser?.uid || null,
@@ -130,7 +164,9 @@ export const ordersApi = {
     }),
 };
 
+// MESSAGES: sent from the Contacts form
 export const messagesApi = {
+  subscribe: (cb) => live("messages", cb), // live list for the admin panel
   list: () =>
     run(async () =>
       (await getDocs(col("messages"))).docs
@@ -164,6 +200,7 @@ export const messagesApi = {
     }),
 };
 
+// POSTS: the journal articles
 export const postsApi = {
   // list({ published: true }) is what the public Journal uses (visitors can only read published posts)
   list: (opts) =>
@@ -202,6 +239,7 @@ export const postsApi = {
     }),
 };
 
+// Friendly texts for login and sign-up errors
 const AUTH_MESSAGES = {
   "auth/invalid-credential": "Wrong email or password.",
   "auth/user-not-found": "Wrong email or password.",
@@ -216,6 +254,7 @@ const AUTH_MESSAGES = {
   "auth/operation-not-allowed":
     "Email/password sign-in is not switched on in the Firebase console.",
 };
+// Turn a Firebase login error into a friendly message
 const authError = (e) =>
   new Error(AUTH_MESSAGES[e?.code] || e?.message || "Sign-in failed.");
 
@@ -236,8 +275,10 @@ const profile = async (u) => {
   };
 };
 
+// LOGIN: log in, sign up, log out, and watch who is logged in
 export const authApi = {
   live: true,
+  // Log in with email and password, then read the profile (name and role)
   login: async (email, password) => {
     if (!email || !password) throw new Error("Enter email and password");
     try {
@@ -247,6 +288,7 @@ export const authApi = {
       throw authError(e);
     }
   },
+  // Create the account, then save the profile in users/{uid} with the role customer
   signup: async (data) => {
     if (!data.email || !data.password)
       throw new Error("Email and password are required");
@@ -273,7 +315,9 @@ export const authApi = {
       throw authError(e);
     }
   },
+  // Log out
   logout: () => signOut(auth),
+  // Call cb whenever someone logs in or out (also when the page loads)
   onChange: (cb) =>
     onAuthStateChanged(auth, async (u) => cb(u ? await profile(u) : null)),
 };

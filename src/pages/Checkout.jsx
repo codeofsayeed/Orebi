@@ -1,8 +1,10 @@
+// Checkout.jsx: the checkout page: billing details, order summary and placing the order.
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useApp } from "../context/AppContext.jsx";
 import { ordersApi } from "../services/api.js";
 
+// Billing form fields: [field name, label, placeholder text]
 const FIELDS = [
   ["firstName", "First Name *", "First Name"],
   ["lastName", "Last Name *", "Last Name"],
@@ -16,29 +18,44 @@ const FIELDS = [
   ["phone", "Phone *", "Phone"],
   ["email", "Email Address *", "Email"],
 ];
+// Payment options: [text shown, status the order gets].
+// Bank is a DEMO payment: no money is taken, the order is simply saved as Paid so every status can be shown in the admin panel.
+const PAYMENTS = [
+  ["Bank (demo payment)", "Paid"],
+  ["Cash on delivery", "Pending"],
+];
+// A form with every field empty
 const empty = Object.fromEntries(FIELDS.map(([k]) => [k, ""]));
 
 export default function Checkout() {
   const { cart, total, clearCart, user } = useApp();
+  // f = the billing form being filled in
   const [f, setF] = useState({ ...empty, email: user?.email || "" });
+  // notes = optional message to the shop
   const [notes, setNotes] = useState("");
-  const [bank, setBank] = useState("Bank");
+  // bank = the payment option selected
+  const [bank, setBank] = useState(PAYMENTS[0][0]);
+  // done = the saved order after a successful checkout (null before that)
   const [done, setDone] = useState(null);
+  // err = error message to show
   const [err, setErr] = useState("");
 
+  // After a successful order, show a thank-you message
   if (done)
     return (
       <>
         <h1>Checkout</h1>
         <h2>Thank you!</h2>
         <p className="muted">
-          Order <b>{done.id}</b> was placed (${done.total.toFixed(2)}).
+          Order <b>{done.id}</b> was placed (${done.total.toFixed(2)}). Payment
+          status: <b>{done.status}</b>.
         </p>
         <Link className="btn" to="/shop">
           Continue shopping
         </Link>
       </>
     );
+  // Nothing to check out when the cart is empty
   if (!cart.length)
     return (
       <>
@@ -49,8 +66,10 @@ export default function Checkout() {
       </>
     );
 
+  // Check the form, save the order (Firebase or demo data), then empty the cart
   const submit = async (e) => {
     e.preventDefault();
+    // These fields must not be empty
     const missing = [
       "firstName",
       "lastName",
@@ -67,6 +86,7 @@ export default function Checkout() {
         customer: `${f.firstName} ${f.lastName}`,
         total,
         payment: bank,
+        status: Object.fromEntries(PAYMENTS)[bank],
         notes,
         address: f,
         items: cart.map((i) => ({
@@ -91,6 +111,7 @@ export default function Checkout() {
         Have a coupon? <b>Click here to enter your code</b>
       </p>
       <form onSubmit={submit}>
+        {/* Part 1: who is ordering and where to send it */}
         <h2>Billing Details</h2>
         <div className="form two">
           {FIELDS.map(([k, label, ph]) => (
@@ -139,6 +160,7 @@ export default function Checkout() {
             </label>
           ))}
         </div>
+        {/* Part 2: optional notes */}
         <h2>Additional Information</h2>
         <div className="form">
           <label>
@@ -151,6 +173,7 @@ export default function Checkout() {
             />
           </label>
         </div>
+        {/* Part 3: summary of the cart */}
         <h2>Your Order</h2>
         <table className="tbl small">
           <tbody>
@@ -178,8 +201,9 @@ export default function Checkout() {
             </tr>
           </tbody>
         </table>
+        {/* Payment choice and the Proceed button (no real payment is taken) */}
         <div className="pay">
-          {["Bank", "Bank 2"].map((b) => (
+          {PAYMENTS.map(([b]) => (
             <label key={b}>
               <input
                 type="radio"
@@ -191,8 +215,9 @@ export default function Checkout() {
             </label>
           ))}
           <p className="note">
-            Pay via Bank; you can pay with your credit card if you don't have a
-            bank account.
+            Demo payment: choosing Bank saves your order as Paid, and no real
+            money is taken. Cash on delivery keeps the order Pending until it is
+            delivered.
           </p>
           <p className="muted">
             Your personal data will be used to process your order, support your
@@ -200,7 +225,7 @@ export default function Checkout() {
             in our privacy policy.
           </p>
           {err && <p className="err">{err}</p>}
-          <button className="btn">Proceed to Bank</button>
+          <button className="btn">Place order</button>
         </div>
       </form>
     </>

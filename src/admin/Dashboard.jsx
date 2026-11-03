@@ -1,3 +1,4 @@
+// Dashboard.jsx: the admin home page: numbers, charts and lists about the shop.
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useApp } from "../context/AppContext.jsx";
@@ -12,7 +13,9 @@ import {
 } from "../services/api.js";
 import { dayStr, money, useToast } from "./ui.jsx";
 import { Icon } from "./icons.jsx";
+import { useLive } from "./useLive.js";
 
+// Color of each order status (used in the charts and lists)
 const STATUS_COLOR = {
   Pending: "#e0a526",
   Paid: "#3b82c4",
@@ -20,12 +23,15 @@ const STATUS_COLOR = {
   Delivered: "#2e9e5b",
   Cancelled: "#c2c2c2",
 };
+// Add up the totals of a list of orders
 const sum = (list) => list.reduce((s, o) => s + o.total, 0);
+// Round the top value of the chart up to a tidy number (1, 2, 5 times 10, 100 ...)
 const niceMax = (m) => {
   const p = 10 ** Math.floor(Math.log10(m));
   const f = m / p;
   return (f <= 1 ? 1 : f <= 2 ? 2 : f <= 5 ? 5 : 10) * p;
 };
+// First letters of a name, for example Mia Chen becomes MC
 const initials = (n = "?") =>
   n
     .split(" ")
@@ -40,6 +46,7 @@ function Count({ to, prefix = "", decimals = 0 }) {
   useEffect(() => {
     let raf;
     let t0;
+    // Runs about 60 times a second for 0.8 seconds, moving the number up
     const run = (t) => {
       t0 = t0 ?? t;
       const p = Math.min(1, (t - t0) / 800);
@@ -97,10 +104,13 @@ function AreaChart({ points }) {
   const R = 16;
   const T = 16;
   const B = 30;
+  // max = the highest value, which sets the top of the chart
   const max = niceMax(Math.max(1, ...points.map((p) => p.v)));
   const n = points.length;
+  // x and y turn a day number and an amount into positions inside the drawing
   const x = (i) => L + (n === 1 ? 0 : (i / (n - 1)) * (W - L - R));
   const y = (v) => T + (1 - v / max) * (H - T - B);
+  // A smooth line that passes through every day's value
   const curve = points
     .map((p, i) => {
       if (!i) return `M${x(0)} ${y(p.v)}`;
@@ -108,6 +118,7 @@ function AreaChart({ points }) {
       return `C${mx} ${y(points[i - 1].v)} ${mx} ${y(p.v)} ${x(i)} ${y(p.v)}`;
     })
     .join(" ");
+  // The same line closed at the bottom, so it can be filled with color
   const area = `${curve} L${x(n - 1)} ${H - B} L${x(0)} ${H - B}Z`;
   const step = Math.ceil(n / 7);
   const colW = (W - L - R) / Math.max(1, n - 1);
@@ -210,6 +221,7 @@ function AreaChart({ points }) {
 // Donut chart of orders by status.
 function Donut({ parts, total }) {
   const r = 54;
+  // c = length of the circle. Each status gets a slice of it.
   const c = 2 * Math.PI * r;
   let acc = 0;
   return (
@@ -258,50 +270,64 @@ export default function Dashboard() {
   const { user } = useApp();
   const toast = useToast();
   const [products, setProducts] = useState([]);
-  const [orders, setOrders] = useState([]);
-  const [msgs, setMsgs] = useState([]);
+  // orders and msgs update by themselves when someone places an order or sends a message
+  const [orders] = useLive(ordersApi.subscribe);
+  const [msgs] = useLive(messagesApi.subscribe);
+  // range = number of days shown in the sales chart
   const [range, setRange] = useState(14);
+  // ready = true once the data has been loaded
   const [ready, setReady] = useState(false);
+  // Load the products (orders and messages are live, see above)
   const load = () =>
-    Promise.all([productsApi.list(), ordersApi.list(), messagesApi.list()])
-      .then(([p, o, m]) => {
+    productsApi
+      .list()
+      .then((p) => {
         setProducts(p);
-        setOrders(o);
-        setMsgs(m);
         setReady(true);
       })
       .catch(() => setReady(true));
+  // Load everything once, when the page opens
   useEffect(() => {
     load();
   }, []);
 
+  // live = orders that count as sales (cancelled ones do not)
   const live = orders.filter((o) => o.status !== "Cancelled");
+  // Orders placed from 'from' to 'to' days ago (0 = today)
   const between = (from, to) =>
     live.filter((o) => o.date >= dayStr(from) && o.date <= dayStr(to));
+  // Percent change between two numbers. null when there is nothing to compare with.
   const trend = (a, b) => (b ? Math.round(((a - b) / b) * 100) : null);
+  // cur = the last 7 days, prev = the 7 days before (used for the up/down arrows)
   const cur = between(6, 0);
   const prev = between(13, 7);
   const revenue = sum(live);
+  // Orders of each of the last 7 days (for the small charts in the cards)
   const week = Array.from({ length: 7 }, (_, i) =>
     live.filter((o) => o.date === dayStr(6 - i)),
   );
+  // Sales of each day (for the big chart)
   const points = Array.from({ length: range }, (_, i) => {
     const d = dayStr(range - 1 - i);
     return { d, v: sum(live.filter((o) => o.date === d)) };
   });
+  // Figures for the welcome banner
   const todayOrders = orders.filter((o) => o.date === dayStr(0));
   const todayRevenue = sum(todayOrders.filter((o) => o.status !== "Cancelled"));
   const pending = orders.filter((o) => o.status === "Pending").length;
   const unread = msgs.filter((m) => !m.read).length;
+  // Products with fewer than 25 in stock, lowest first
   const low = products
     .filter((p) => p.stock < 25)
     .sort((a, b) => a.stock - b.stock)
     .slice(0, 5);
+  // Look up a product quickly by its id
   const byId = Object.fromEntries(products.map((p) => [p.id, p]));
   const parts = STATUSES.map((s) => ({
     s,
     n: orders.filter((o) => o.status === s).length,
   }));
+  // Best sellers: add up the quantity sold of every product
   const top = useMemo(() => {
     const m = {};
     orders
@@ -319,27 +345,31 @@ export default function Dashboard() {
   }, [orders]);
   const topMax = Math.max(1, ...top.map((t) => t.qty));
 
+  // Greeting for the time of day
   const h = new Date().getHours();
   const greet =
     h < 12 ? "Good morning" : h < 18 ? "Good afternoon" : "Good evening";
   const name = (user?.name || "Admin").replace(/^./, (c) => c.toUpperCase());
 
+  // Fill an empty Firebase database with the demo data
   const seed = async () => {
     await seedApi.run();
     toast("Demo data loaded");
     load();
   };
+  // Change the status of an order
   const setStatus = async (id, status) => {
     await ordersApi.update(id, { status });
     toast(`${id} marked ${status}`);
-    load();
   };
+  // Add 10 units to a product
   const restock = async (p) => {
     await productsApi.update(p.id, { stock: p.stock + 10 });
     toast("Added 10 units");
     load();
   };
 
+  // The four colored stat cards at the top
   const cards = [
     {
       label: "Total revenue",
@@ -398,6 +428,7 @@ export default function Dashboard() {
         </div>
       )}
 
+      {/* Welcome banner */}
       <div className="ad-hero">
         <div>
           <small>{greet}</small>
@@ -440,6 +471,7 @@ export default function Dashboard() {
         </div>
       </div>
 
+      {/* Four stat cards */}
       <div className="ad-stats">
         {cards.map((c, i) => (
           <Link
@@ -477,6 +509,7 @@ export default function Dashboard() {
         ))}
       </div>
 
+      {/* Row 1: sales chart and orders by status */}
       <div className="ad-row r21">
         <div className="ad-card">
           <div className="ph">
@@ -518,6 +551,7 @@ export default function Dashboard() {
         </div>
       </div>
 
+      {/* Row 2: recent orders and top selling products */}
       <div className="ad-row r21">
         <div className="ad-card">
           <div className="ph">
@@ -587,6 +621,7 @@ export default function Dashboard() {
         </div>
       </div>
 
+      {/* Row 3: low stock and latest messages */}
       <div className="ad-row r11">
         <div className="ad-card">
           <div className="ph">

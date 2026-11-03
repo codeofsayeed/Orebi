@@ -1,3 +1,19 @@
+/*
+  global.css: all the styling of the website, in one file.
+  Tip: search this file (Ctrl+F) for the section names below.
+
+  Top part ...... base styles (fonts, colors, buttons) and early page styles
+  v2 ............ Home, Product, Cart, About, Contacts, Sign up / Checkout / Account
+  v3 ............ Journal page and the first admin styles
+  v4 ............ header and footer (classes starting .hd- and .ft-)
+  v5 ............ Shop filter sidebar (.flt-)
+  v6 - v9 ....... color dots, Contacts live map, product details list, dashboard notes
+  v10 ........... the admin panel (.ad-)
+  v11 ........... footer social icons
+
+  Main colors are the variables in :root just below: --dark, --gray, --soft, --line.
+  --w is the page width (it is set again in v4). Change a variable once and it changes everywhere.
+*/
 :root {
   --dark: #262626;
   --gray: #767676;
@@ -83,7 +99,7 @@ h6 {
   opacity: 0.4;
   cursor: not-allowed;
 }
-/* header */
+/* header (OLD rules: the current header uses .hd- in v4. Only .logo and .search from this block are still used.) */
 .top {
   display: flex;
   align-items: center;
@@ -147,7 +163,7 @@ h6 {
   align-items: center;
   font-size: 14px;
 }
-/* footer */
+/* footer (OLD rules: the current footer uses .ft- in v4) */
 footer {
   background: var(--soft);
   padding: 56px 0 40px;
@@ -2550,4 +2566,60 @@ button.flt-title {
 .ft-social a:focus-visible {
   outline: 2px solid var(--dark);
   outline-offset: 4px;
+}
+
+/* ===== v12: live Orders and Messages ===== */
+/* small pulsing 'Live' label next to the page title */
+.live {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 12px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: #e3f5ea;
+  color: #1c7a45;
+  font-size: 12px;
+  font-weight: 700;
+  vertical-align: middle;
+}
+.live::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #2e9e5b;
+  animation: pulse 1.6s infinite;
+}
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(46, 158, 91, 0.6);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(46, 158, 91, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(46, 158, 91, 0);
+  }
+}
+/* a new order or message flashes yellow for a few seconds */
+@keyframes flash {
+  from {
+    background: #fff4cf;
+  }
+}
+.tbl tr.fresh td,
+.msg.fresh {
+  animation: flash 6s ease-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  .live::before,
+  .tbl tr.fresh td,
+  .msg.fresh {
+    animation: none;
+  }
+}
+/* fix: sidebar text was spread out; keep icon and text together on the left */
+.admin .ad-side .ad-link {
+  justify-content: flex-start;
 }
